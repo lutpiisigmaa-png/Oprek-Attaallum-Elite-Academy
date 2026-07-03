@@ -8,15 +8,16 @@
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Google Fonts: Modern Minecraft.net Style -->
+  <!-- Google Fonts: Minecraft Pixel + Modern Body -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
 
   <style>
-    /* Konfigurasi Font ala Minecraft.net */
+    /* Konfigurasi Font */
     .font-mc-heading { font-family: 'Montserrat', sans-serif; }
     .font-mc-body { font-family: 'Noto Sans', sans-serif; }
+    .font-pixel { font-family: 'Press Start 2P', monospace; line-height: 1.5; }
     
     /* Tombol Hijau ala Minecraft.net */
     .mc-btn-green {
@@ -34,10 +35,12 @@
     .mc-btn-green:active {
       transform: translateY(4px);
       border-bottom: 0px solid #007a4b;
-      margin-bottom: 4px; /* Kompensasi tinggi border yang hilang */
+      margin-bottom: 4px;
     }
 
-    /* Animasi Scroll */
+    .pixelated { image-rendering: pixelated; }
+
+    /* Animasi Scroll Pop-up */
     .scroll-anim {
       opacity: 0;
       transform: translateY(40px);
@@ -59,31 +62,58 @@
       60% { transform: translate(-2px, 2px) rotate(-1deg); }
       80% { transform: translate(2px, 2px) rotate(1deg); }
     }
-
     .animate-flash { animation: flash 0.6s ease-out forwards; }
     @keyframes flash {
       0% { opacity: 1; background-color: #fff; }
       20% { background-color: #ffaa00; }
       100% { opacity: 0; }
     }
-
-    /* Runtuh */
     .crumble { animation: fall 1.2s forwards cubic-bezier(0.55, 0.085, 0.68, 0.53); }
     @keyframes fall {
       0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
       100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); opacity: 0; }
     }
+
+    /* === ANIMASI BARU: MINECRAFT KARAKTER === */
+    
+    /* 1. Item/Karakter Melayang (Floating) */
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* 2. Creeper Ngintip dari layar (Peeking) */
+    .animate-peek {
+      animation: peek 6s ease-in-out infinite;
+    }
+    @keyframes peek {
+      0%, 10% { transform: translateX(100%); } /* Sembunyi di luar layar */
+      40%, 60% { transform: translateX(10%); }  /* Masuk ngintip */
+      90%, 100% { transform: translateX(100%); } /* Sembunyi lagi */
+    }
   </style>
 </head>
-<body class="bg-[#121212] text-white overflow-x-hidden selection:bg-[#008A55] selection:text-white font-mc-body">
+<body class="bg-[#121212] text-white overflow-x-hidden selection:bg-[#008A55] selection:text-white font-mc-body relative">
 
   <!-- Audio Element (Hidden) -->
   <audio id="sfx-explosion" src="sfx-explosion.mp3" preload="auto"></audio>
 
-  <!-- ================= HALAMAN INTRO (TNT & LAYAR PUTIH) ================= -->
+  <!-- Creeper Ngintip (Fixed di pojok kanan bawah, muncul setelah ledakan) -->
+  <img 
+    src="creeper.png" 
+    onerror="this.src='https://art.pixilart.com/2646d6541f537bc.png'" 
+    alt="Creeper" 
+    class="fixed bottom-0 -right-4 w-32 md:w-48 z-30 pixelated animate-peek opacity-0 transition-opacity duration-1000" 
+    id="creeper-char"
+  />
+
+  <!-- ================= HALAMAN INTRO (TNT) ================= -->
   <div id="intro-screen" class="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-white">
     <div id="shatter-grid" class="absolute inset-0 grid grid-cols-10 grid-rows-10 z-40 scale-105 pointer-events-none"></div>
-    <!-- Pastikan file tnt.png ada di folder yang sama -->
     <img 
       id="tnt-btn" 
       src="tnt.png" 
@@ -93,86 +123,100 @@
   </div>
   <div id="flash-overlay" class="fixed inset-0 z-[60] pointer-events-none opacity-0"></div>
 
-
-  <!-- ================= HALAMAN UTAMA (WEB MODERN MINECRAFT.NET) ================= -->
+  <!-- ================= HALAMAN UTAMA ================= -->
   <div id="main-content" class="min-h-screen relative z-10 flex flex-col">
     
-    <!-- Fake Navbar ala Minecraft.net -->
+    <!-- Navbar -->
     <nav class="bg-[#242424] border-b border-[#333] px-6 py-4 flex justify-between items-center sticky top-0 z-40">
       <div class="flex items-center gap-2">
-        <div class="w-8 h-8 bg-[#008A55] flex items-center justify-center font-mc-heading font-black text-xl">A</div>
-        <span class="font-mc-heading font-black text-xl tracking-widest text-white">ATTEA</span>
+        <div class="w-8 h-8 bg-[#00A86B] flex items-center justify-center font-pixel text-xs pt-1 shadow-[inset_-2px_-2px_0px_rgba(0,0,0,0.3)]">A</div>
+        <span class="font-pixel text-xs md:text-sm tracking-widest text-white mt-1">ATTEA</span>
       </div>
       <div class="hidden md:flex gap-6 font-bold text-sm text-gray-300 uppercase">
-        <a href="#" class="hover:text-white transition-colors">Home</a>
         <a href="#about" class="hover:text-white transition-colors">About</a>
         <a href="#form" class="hover:text-white transition-colors text-[#00A86B]">Join Server</a>
       </div>
     </nav>
 
-    <!-- Hero Banner -->
-    <header class="relative bg-[#1c1c1c] py-20 md:py-32 flex flex-col items-center justify-center text-center px-4 border-b border-[#333]">
-      <h1 class="font-mc-heading font-black text-5xl md:text-7xl mb-4 tracking-tight uppercase scroll-anim">
+    <!-- Hero Banner (Dengan Steve Floating) -->
+    <header class="relative bg-[#1c1c1c] py-20 md:py-32 flex flex-col items-center justify-center text-center px-4 border-b border-[#333] overflow-hidden">
+      
+      <!-- Gambar Steve Melayang -->
+      <img 
+        src="steve.png" 
+        onerror="this.src='https://art.pixilart.com/df7418721c56910.png'" 
+        alt="Steve" 
+        class="absolute left-4 md:left-24 bottom-10 w-24 md:w-40 pixelated animate-float drop-shadow-[0_15px_15px_rgba(0,0,0,0.5)] z-0 opacity-50 md:opacity-100"
+      />
+
+      <h1 class="font-mc-heading font-black text-5xl md:text-7xl mb-4 tracking-tight uppercase scroll-anim relative z-10">
         ATTEA VOL. <span class="text-[#00A86B]">1</span>
       </h1>
-      <p class="text-xl md:text-2xl text-gray-400 font-bold max-w-2xl mx-auto uppercase tracking-wide scroll-anim" style="transition-delay: 0.1s;">
+      <p class="text-xl md:text-2xl text-gray-400 font-bold max-w-2xl mx-auto uppercase tracking-wide scroll-anim relative z-10" style="transition-delay: 0.1s;">
         Open Recruitment Panitia
       </p>
     </header>
 
-    <div class="flex-grow max-w-4xl mx-auto w-full p-4 md:p-8 space-y-16 mt-8">
+    <div class="flex-grow max-w-5xl mx-auto w-full p-4 md:p-8 space-y-16 mt-8">
       
       <!-- Deskripsi Acara -->
       <section id="about" class="scroll-anim space-y-8">
-        <h2 class="font-mc-heading font-black text-3xl uppercase border-l-4 border-[#00A86B] pl-4">
-          Langkah Awal Menuju Ma'had Al-Azhar
+        
+        <!-- Judul Pakai Pixel -->
+        <h2 class="font-pixel text-xl md:text-2xl text-[#00A86B] mb-6 leading-relaxed" style="text-shadow: 2px 2px 0 #000;">
+          TENTANG ATTAALLUM ELITE ACADEMY
         </h2>
         
-        <div class="text-gray-300 leading-relaxed text-lg space-y-4">
+        <div class="text-gray-300 leading-relaxed text-lg space-y-4 border-l-4 border-[#333] pl-6">
           <p>
-            <b class="text-white">ATTEA (Attaallum Elite Academy) Volume 1</b> adalah ajang kompetisi yang dirancang khusus bagi calon pelajar yang sedang mempersiapkan diri menghadapi <i class="text-gray-100">Imtihan Qobul</i> (ujian masuk) Ma'had Al-Azhar. Lebih dari sekadar ajang adu kecerdasan, ATTEA hadir sebagai wadah simulasi yang lengkap dan menyeluruh untuk mematangkan wawasan akademik serta kesiapan mental peserta.
+            <b class="text-white">ATTAALLUM ELITE ACADEMY (ATTEA)</b> Volume 1 adalah ajang perlombaan kompetitif yang dirancang khusus bagi anak-anak tangguh yang sedang bersiap menghadapi <i>Imtihan Qobul</i> (ujian masuk) di Ma'had Al-Azhar. Di <b class="text-white">ATTAALLUM ELITE ACADEMY</b>, ini bukan sekadar panggung simulasi biasa, melainkan arena kompetisi nyata untuk mengasah pengetahuan dan keilmuan peserta secara mendalam.
           </p>
           <p>
-            Acara ini dikemas sedemikian rupa agar berjalan seru, kompetitif, dan penuh tantangan. Dengan begitu, peserta bisa merasakan pengalaman bersaing yang tidak membosankan sekaligus menguji sejauh mana kemampuan mereka!
+            Acara <b class="text-[#00A86B]">ATTAALLUM ELITE ACADEMY</b> dikemas sedemikian rupa agar berjalan seru, kompetitif, dan penuh tantangan. Dengan begitu, peserta bisa merasakan pengalaman bersaing yang sehat sekaligus menanamkan nilai kejujuran, sportifitas, dan kerja keras!
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-          <!-- Card 1 -->
-          <div class="bg-[#242424] p-6 border-t-4 border-[#00A86B]">
-            <h3 class="font-mc-heading font-bold text-lg mb-2 text-white">Persiapan Terarah</h3>
-            <p class="text-gray-400 text-sm">Pengalaman langsung lewat perlombaan yang mirip materi seleksi Ma'had Al-Azhar, menumbuhkan rasa percaya diri.</p>
+        <!-- Poin Utama Pakai Pixel Font -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8">
+          
+          <!-- Poin 1 (Mengganti Persiapan Terarah) -->
+          <div class="bg-[#242424] p-6 border-t-4 border-[#F2B035] transform hover:-translate-y-2 transition-transform duration-300">
+            <h3 class="font-pixel text-sm mb-4 text-[#F2B035] leading-loose">⚔️ KOMPETISI<br/>SENGIT</h3>
+            <p class="text-gray-400 text-sm font-mc-body">Menyajikan perlombaan dengan ritme dan tekanan nyata, menumbuhkan rasa percaya diri untuk tampil sebagai yang terbaik.</p>
           </div>
-          <!-- Card 2 -->
-          <div class="bg-[#242424] p-6 border-t-4 border-[#F2B035]">
-            <h3 class="font-mc-heading font-bold text-lg mb-2 text-white">Uji Pengetahuan</h3>
-            <p class="text-gray-400 text-sm">Setiap babak perlombaan didesain khusus mengasah pemahaman untuk mengeluarkan potensi ilmu terbaik.</p>
+          
+          <!-- Poin 2 -->
+          <div class="bg-[#242424] p-6 border-t-4 border-[#00A86B] transform hover:-translate-y-2 transition-transform duration-300">
+            <h3 class="font-pixel text-sm mb-4 text-[#00A86B] leading-loose">🏹 UJI<br/>PENGETAHUAN</h3>
+            <p class="text-gray-400 text-sm font-mc-body">Setiap babak dan tantangan didesain khusus untuk memacu setiap peserta mengeluarkan potensi ilmu terbaik mereka di hadapan penguji.</p>
           </div>
-          <!-- Card 3 -->
-          <div class="bg-[#242424] p-6 border-t-4 border-[#3B82F6]">
-            <h3 class="font-mc-heading font-bold text-lg mb-2 text-white">Bangun Karakter</h3>
-            <p class="text-gray-400 text-sm">Membuktikan karakter lewat kejujuran, sikap sportif, serta kekompakan saat bekerja sama dalam tim.</p>
+          
+          <!-- Poin 3 -->
+          <div class="bg-[#242424] p-6 border-t-4 border-[#3B82F6] transform hover:-translate-y-2 transition-transform duration-300">
+            <h3 class="font-pixel text-sm mb-4 text-[#3B82F6] leading-loose">🛡️ BANGUN<br/>KARAKTER</h3>
+            <p class="text-gray-400 text-sm font-mc-body">Di ATTAALLUM ELITE ACADEMY, pintar saja tidak cukup. Peserta dituntut membuktikan nilai kejujuran, sportifitas, dan kerja sama tim yang solid.</p>
           </div>
         </div>
 
-        <div class="bg-[#1c1c1c] p-6 border border-[#333]">
-          <p class="text-gray-300">
-            <b class="text-white">Visi ATTEA:</b> Membawa semangat dari Markaz At-Ta'allum, akademi elit ini tidak sekadar mencari siapa yang berhak jadi juara. ATTEA Vol. 1 didedikasikan untuk membentuk calon pelajar yang pantang menyerah, berintegritas tinggi, berakhlak mulia, dan benar-benar siap secara ilmu.
+        <div class="bg-[#1c1c1c] p-6 border-2 border-dashed border-[#444] mt-8">
+          <p class="text-gray-300 font-mc-body">
+            <span class="font-pixel text-xs text-[#00A86B]">VISI ATTAALLUM ELITE ACADEMY:</span><br/><br/>
+            Membawa semangat dari Markaz At-Ta'allum, <b class="text-white">ATTAALLUM ELITE ACADEMY</b> didedikasikan untuk membentuk calon pelajar yang pantang menyerah, berintegritas tinggi, berakhlak mulia, dan benar-benar siap secara mental dan ilmu!
           </p>
         </div>
       </section>
 
       <!-- Formulir Pendaftaran -->
-      <section id="form" class="scroll-anim mb-24">
-        <div class="bg-[#242424] p-8 md:p-10 border border-[#333]">
-          <h2 class="font-mc-heading font-black text-3xl uppercase mb-8 pb-4 border-b border-[#444]">
-            Form Pendaftaran
+      <section id="form" class="scroll-anim mb-24 relative z-10">
+        <div class="bg-[#242424] p-8 md:p-10 border border-[#333] shadow-2xl">
+          <h2 class="font-pixel text-xl md:text-2xl text-white mb-8 pb-4 border-b border-[#444]" style="text-shadow: 2px 2px 0 #000;">
+            📝 JOIN SERVER (OPREC)
           </h2>
 
-          <form id="oprec-form" class="space-y-6">
+          <form id="oprec-form" class="space-y-6 font-mc-body">
             <div class="space-y-2">
               <label class="block font-bold text-gray-200">1. Nama Lengkap</label>
-              <input type="text" required class="w-full bg-[#121212] border border-[#444] p-4 text-white focus:outline-none focus:border-[#00A86B] transition-colors" placeholder="Ketik nama lengkapmu..." />
+              <input type="text" required class="w-full bg-[#121212] border border-[#444] p-4 text-white focus:outline-none focus:border-[#00A86B] transition-colors" placeholder="Ketik namamu..." />
             </div>
 
             <div class="space-y-2">
@@ -217,7 +261,7 @@
 
             <div class="space-y-2">
               <label class="block font-bold text-gray-200">5. Nomor WhatsApp Aktif</label>
-              <input type="tel" required class="w-full bg-[#121212] border border-[#444] p-4 text-white focus:outline-none focus:border-[#00A86B] transition-colors" placeholder="Contoh: +2012xxxxxxx" />
+              <input type="tel" required class="w-full bg-[#121212] border border-[#444] p-4 text-white focus:outline-none focus:border-[#00A86B] transition-colors" placeholder="+20..." />
             </div>
 
             <div class="space-y-3 pt-2">
@@ -235,8 +279,8 @@
             </div>
 
             <div class="pt-6">
-              <button type="submit" class="w-full mc-btn-green p-4 text-xl tracking-wider">
-                JOIN SERVER
+              <button type="submit" class="w-full mc-btn-green p-4 font-pixel text-sm tracking-wider">
+                > SUBMIT_FORM
               </button>
             </div>
           </form>
@@ -245,8 +289,8 @@
     </div>
     
     <!-- Footer -->
-    <footer class="bg-[#1c1c1c] border-t border-[#333] text-center p-8 mt-auto">
-      <p class="text-gray-500 font-bold uppercase text-sm font-mc-heading tracking-widest">Markaz At-Ta'allum © 2026</p>
+    <footer class="bg-[#1c1c1c] border-t border-[#333] text-center p-8 mt-auto relative z-40">
+      <p class="text-gray-500 font-bold uppercase text-xs font-pixel tracking-widest">Markaz At-Ta'allum © 2026</p>
     </footer>
 
   </div>
@@ -255,7 +299,7 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       
-      // === 1. SETUP LAYAR PUTIH YANG BISA RUNTUH ===
+      // === SETUP LAYAR PUTIH (SHATTER) ===
       const shatterGrid = document.getElementById('shatter-grid');
       const blocks = [];
       const totalBlocks = 100;
@@ -278,11 +322,12 @@
         blocks.push(block);
       }
 
-      // === 2. LOGIKA LEDAKAN TNT ===
+      // === LOGIKA LEDAKAN TNT ===
       const tntBtn = document.getElementById('tnt-btn');
       const introScreen = document.getElementById('intro-screen');
       const flashOverlay = document.getElementById('flash-overlay');
       const sfx = document.getElementById('sfx-explosion');
+      const creeper = document.getElementById('creeper-char');
 
       tntBtn.addEventListener('click', () => {
         if(sfx) { sfx.play().catch(e => console.log(e)); }
@@ -300,6 +345,10 @@
             introScreen.remove();
             flashOverlay.remove();
             
+            // Munculkan Creeper setelah ledakan selesai
+            creeper.classList.remove('opacity-0');
+            
+            // Trigger efek pop-up
             document.querySelectorAll('.scroll-anim').forEach(el => {
               observer.observe(el);
             });
@@ -308,7 +357,7 @@
         }, 600); 
       });
 
-      // === 3. OBSERVER UNTUK ANIMASI SCROLL WEB UTAMA ===
+      // === OBSERVER UNTUK ANIMASI SCROLL ===
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -321,7 +370,7 @@
         rootMargin: "0px 0px -50px 0px"
       });
 
-      // === 4. HANDLE SUBMIT FORM ===
+      // === HANDLE SUBMIT FORM ===
       const form = document.getElementById('oprec-form');
       form.addEventListener('submit', (e) => {
         e.preventDefault();
