@@ -8,240 +8,247 @@
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Google Fonts: Minecraft Vibes -->
+  <!-- Google Fonts: Modern Minecraft.net Style -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    /* Konfigurasi Font */
-    .font-minecraft-title { font-family: 'Press Start 2P', monospace; }
-    .font-minecraft-body { font-family: 'VT323', monospace; font-size: 1.45rem; }
+    /* Konfigurasi Font ala Minecraft.net */
+    .font-mc-heading { font-family: 'Montserrat', sans-serif; }
+    .font-mc-body { font-family: 'Noto Sans', sans-serif; }
     
-    /* Styling Border Ala Minecraft */
-    .pixel-border {
-      border: 4px solid;
-      border-color: #858585 #373737 #373737 #858585;
+    /* Tombol Hijau ala Minecraft.net */
+    .mc-btn-green {
+      background-color: #008A55;
+      color: white;
+      text-transform: uppercase;
+      font-weight: 800;
+      border-bottom: 4px solid #005c39;
+      transition: all 0.1s ease-in-out;
     }
-    .pixel-button {
-      border: 4px solid;
-      border-color: #adadad #535353 #535353 #adadad;
+    .mc-btn-green:hover {
+      background-color: #00A86B;
+      border-bottom: 4px solid #007a4b;
     }
-    .pixelated { image-rendering: pixelated; }
+    .mc-btn-green:active {
+      transform: translateY(4px);
+      border-bottom: 0px solid #007a4b;
+      margin-bottom: 4px; /* Kompensasi tinggi border yang hilang */
+    }
 
-    /* Animasi Scroll untuk Halaman Utama */
+    /* Animasi Scroll */
     .scroll-anim {
       opacity: 0;
-      transform: translateY(40px) scale(0.95);
-      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      transform: translateY(40px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
     }
     .animate-pop {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0);
     }
 
-    /* === ANIMASI LEDAKAN & RUNTUH === */
+    /* === ANIMASI LEDAKAN TNT === */
     .animate-shake {
       animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both infinite;
     }
     @keyframes shake {
-      0% { transform: translate(1px, 1px) rotate(0deg); }
-      10% { transform: translate(-1px, -2px) rotate(-1deg); }
-      20% { transform: translate(-3px, 0px) rotate(1deg); }
-      30% { transform: translate(3px, 2px) rotate(0deg); }
-      40% { transform: translate(1px, -1px) rotate(1deg); }
-      50% { transform: translate(-1px, 2px) rotate(-1deg); }
-      60% { transform: translate(-3px, 1px) rotate(0deg); }
-      70% { transform: translate(3px, 1px) rotate(-1deg); }
-      80% { transform: translate(-1px, -1px) rotate(1deg); }
-      90% { transform: translate(1px, 2px) rotate(0deg); }
-      100% { transform: translate(1px, -2px) rotate(-1deg); }
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      20% { transform: translate(-2px, -2px) rotate(-1deg); }
+      40% { transform: translate(2px, -1px) rotate(1deg); }
+      60% { transform: translate(-2px, 2px) rotate(-1deg); }
+      80% { transform: translate(2px, 2px) rotate(1deg); }
     }
 
-    .animate-flash {
-      animation: flash 0.6s ease-out forwards;
-    }
+    .animate-flash { animation: flash 0.6s ease-out forwards; }
     @keyframes flash {
       0% { opacity: 1; background-color: #fff; }
       20% { background-color: #ffaa00; }
       100% { opacity: 0; }
     }
 
-    /* Animasi kotak-kotak putih jatuh */
-    .crumble {
-      animation: fall 1.2s forwards cubic-bezier(0.55, 0.085, 0.68, 0.53);
-    }
+    /* Runtuh */
+    .crumble { animation: fall 1.2s forwards cubic-bezier(0.55, 0.085, 0.68, 0.53); }
     @keyframes fall {
       0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
-      100% { 
-        transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); 
-        opacity: 0; 
-      }
+      100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); opacity: 0; }
     }
   </style>
 </head>
-<body class="bg-[#142407] text-[#e0e0e0] overflow-x-hidden selection:bg-[#55ff55] selection:text-black">
+<body class="bg-[#121212] text-white overflow-x-hidden selection:bg-[#008A55] selection:text-white font-mc-body">
 
   <!-- Audio Element (Hidden) -->
   <audio id="sfx-explosion" src="sfx-explosion.mp3" preload="auto"></audio>
 
   <!-- ================= HALAMAN INTRO (TNT & LAYAR PUTIH) ================= -->
-  <!-- Ditambah bg-white di sini biar garis-garis grid tertutup sempurna -->
   <div id="intro-screen" class="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-white">
-    
-    <!-- Grid Layar Putih -->
-    <div id="shatter-grid" class="absolute inset-0 grid grid-cols-10 grid-rows-10 z-40 scale-105 pointer-events-none">
-      <!-- Kotak putih dimasukkan di sini oleh JS -->
-    </div>
-
-    <!-- Tombol TNT (Udah diganti ke tnt.png dan pakai drop-shadow) -->
+    <div id="shatter-grid" class="absolute inset-0 grid grid-cols-10 grid-rows-10 z-40 scale-105 pointer-events-none"></div>
+    <!-- Pastikan file tnt.png ada di folder yang sama -->
     <img 
       id="tnt-btn" 
       src="tnt.png" 
       alt="TNT" 
-      class="w-48 h-48 md:w-56 md:h-56 object-contain cursor-pointer z-50 transition-transform hover:scale-110 active:scale-95 drop-shadow-[0_10px_15px_rgba(0,0,0,0.4)]"
+      class="w-48 h-48 md:w-56 md:h-56 object-contain cursor-pointer z-50 transition-transform hover:scale-110 drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)]"
     />
   </div>
-
-  <!-- Flash Overlay untuk efek ledakan -->
   <div id="flash-overlay" class="fixed inset-0 z-[60] pointer-events-none opacity-0"></div>
 
 
-  <!-- ================= HALAMAN UTAMA (WEB MINECRAFT) ================= -->
-  <div id="main-content" class="min-h-screen bg-[#2c2017] font-minecraft-body p-4 md:p-8 relative z-10" style="background-image: url('https://www.transparenttextures.com/patterns/dirt.png');">
-    <div class="max-w-3xl mx-auto space-y-12 pb-24">
-      
-      <!-- Header -->
-      <header class="text-center pt-8 scroll-anim">
-        <h1 class="font-minecraft-title text-3xl md:text-5xl text-[#55ff55] mb-4 tracking-wider" style="text-shadow: 0 5px 0 #000;">
-          ATTEA VOL. 1
-        </h1>
-        <div class="inline-block bg-[#1a120c] pixel-border p-3 text-[#ffff55] tracking-widest text-xl">
-          [ OPEN RECRUITMENT PANITIA ]
-        </div>
-      </header>
+  <!-- ================= HALAMAN UTAMA (WEB MODERN MINECRAFT.NET) ================= -->
+  <div id="main-content" class="min-h-screen relative z-10 flex flex-col">
+    
+    <!-- Fake Navbar ala Minecraft.net -->
+    <nav class="bg-[#242424] border-b border-[#333] px-6 py-4 flex justify-between items-center sticky top-0 z-40">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-[#008A55] flex items-center justify-center font-mc-heading font-black text-xl">A</div>
+        <span class="font-mc-heading font-black text-xl tracking-widest text-white">ATTEA</span>
+      </div>
+      <div class="hidden md:flex gap-6 font-bold text-sm text-gray-300 uppercase">
+        <a href="#" class="hover:text-white transition-colors">Home</a>
+        <a href="#about" class="hover:text-white transition-colors">About</a>
+        <a href="#form" class="hover:text-white transition-colors text-[#00A86B]">Join Server</a>
+      </div>
+    </nav>
 
+    <!-- Hero Banner -->
+    <header class="relative bg-[#1c1c1c] py-20 md:py-32 flex flex-col items-center justify-center text-center px-4 border-b border-[#333]">
+      <h1 class="font-mc-heading font-black text-5xl md:text-7xl mb-4 tracking-tight uppercase scroll-anim">
+        ATTEA VOL. <span class="text-[#00A86B]">1</span>
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-400 font-bold max-w-2xl mx-auto uppercase tracking-wide scroll-anim" style="transition-delay: 0.1s;">
+        Open Recruitment Panitia
+      </p>
+    </header>
+
+    <div class="flex-grow max-w-4xl mx-auto w-full p-4 md:p-8 space-y-16 mt-8">
+      
       <!-- Deskripsi Acara -->
-      <section class="bg-[#4a3b32] pixel-border p-6 md:p-8 shadow-2xl scroll-anim">
-        <h2 class="font-minecraft-title text-base md:text-lg text-[#ffaa00] mb-6 border-b-4 border-[#372a22] pb-3" style="text-shadow: 0 2px 0 #000;">
-          ATTEA Vol. 1 (Attaallum Elite Academy): Langkah Awal Menuju Ma'had Al-Azhar
+      <section id="about" class="scroll-anim space-y-8">
+        <h2 class="font-mc-heading font-black text-3xl uppercase border-l-4 border-[#00A86B] pl-4">
+          Langkah Awal Menuju Ma'had Al-Azhar
         </h2>
         
-        <div class="space-y-4 text-stone-200">
+        <div class="text-gray-300 leading-relaxed text-lg space-y-4">
           <p>
-            <span class="text-[#ff5555] font-bold">Deskripsi Acara:</span><br />
-            ATTEA (Attaallum Elite Academy) Volume 1 adalah ajang kompetisi yang dirancang khusus bagi calon pelajar yang sedang mempersiapkan diri menghadapi <i class="text-[#55ffff]">Imtihan Qobul</i> (ujian masuk) Ma'had Al-Azhar. Lebih dari sekadar ajang adu kecerdasan, ATTEA hadir sebagai wadah simulasi yang lengkap dan menyeluruh untuk mematangkan wawasan akademik serta kesiapan mental peserta.
+            <b class="text-white">ATTEA (Attaallum Elite Academy) Volume 1</b> adalah ajang kompetisi yang dirancang khusus bagi calon pelajar yang sedang mempersiapkan diri menghadapi <i class="text-gray-100">Imtihan Qobul</i> (ujian masuk) Ma'had Al-Azhar. Lebih dari sekadar ajang adu kecerdasan, ATTEA hadir sebagai wadah simulasi yang lengkap dan menyeluruh untuk mematangkan wawasan akademik serta kesiapan mental peserta.
           </p>
           <p>
             Acara ini dikemas sedemikian rupa agar berjalan seru, kompetitif, dan penuh tantangan. Dengan begitu, peserta bisa merasakan pengalaman bersaing yang tidak membosankan sekaligus menguji sejauh mana kemampuan mereka!
           </p>
         </div>
 
-        <div class="mt-8 space-y-6">
-          <h3 class="text-[#55ff55] font-bold border-b-2 border-[#372a22] pb-1">Fokus dan Tujuan Utama:</h3>
-          <p class="text-stone-300">Program perlombaan ini bertumpu pada tiga tujuan penting:</p>
-          
-          <div class="bg-[#31251e] p-4 pixel-border border-l-8 border-l-[#55ff55]">
-            <p class="text-[#55ff55] font-bold">⚔️ Persiapan Imtihan Qobul yang Terarah:</p>
-            <p class="text-sm text-stone-300 mt-1">Memberikan pengalaman langsung lewat perlombaan yang mirip dengan materi seleksi Ma'had Al-Azhar. Peserta akan diajak terbiasa dengan ritme, tekanan, dan jenis soal yang ada, sehingga rasa percaya diri mereka akan tumbuh dengan sendirinya.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+          <!-- Card 1 -->
+          <div class="bg-[#242424] p-6 border-t-4 border-[#00A86B]">
+            <h3 class="font-mc-heading font-bold text-lg mb-2 text-white">Persiapan Terarah</h3>
+            <p class="text-gray-400 text-sm">Pengalaman langsung lewat perlombaan yang mirip materi seleksi Ma'had Al-Azhar, menumbuhkan rasa percaya diri.</p>
           </div>
-
-          <div class="bg-[#31251e] p-4 pixel-border border-l-8 border-l-[#ffaa00]">
-            <p class="text-[#ffaa00] font-bold">🏹 Uji Pengetahuan yang Menantang:</p>
-            <p class="text-sm text-stone-300 mt-1">Setiap babak dan tantangan perlombaan didesain khusus untuk mengasah pemahaman peserta. Suasana kompetitif yang dibangun akan memacu setiap orang untuk fokus dan mengeluarkan potensi ilmu terbaik mereka.</p>
+          <!-- Card 2 -->
+          <div class="bg-[#242424] p-6 border-t-4 border-[#F2B035]">
+            <h3 class="font-mc-heading font-bold text-lg mb-2 text-white">Uji Pengetahuan</h3>
+            <p class="text-gray-400 text-sm">Setiap babak perlombaan didesain khusus mengasah pemahaman untuk mengeluarkan potensi ilmu terbaik.</p>
           </div>
-
-          <div class="bg-[#31251e] p-4 pixel-border border-l-8 border-l-[#55ffff]">
-            <p class="text-[#55ffff] font-bold">🛡️ Membangun Karakter dan Kerja Sama:</p>
-            <p class="text-sm text-stone-300 mt-1">Menciptakan persaingan yang sehat dan positif. Di ATTEA, menjadi pintar saja tidak cukup. Peserta juga dituntut untuk membuktikan karakter mereka lewat nilai-nilai penting seperti kejujuran, sikap sportif saat bersaing, serta kekompakan saat bekerja sama dalam tim.</p>
+          <!-- Card 3 -->
+          <div class="bg-[#242424] p-6 border-t-4 border-[#3B82F6]">
+            <h3 class="font-mc-heading font-bold text-lg mb-2 text-white">Bangun Karakter</h3>
+            <p class="text-gray-400 text-sm">Membuktikan karakter lewat kejujuran, sikap sportif, serta kekompakan saat bekerja sama dalam tim.</p>
           </div>
         </div>
 
-        <div class="mt-8 bg-[#211711] p-4 pixel-border">
-          <p class="text-stone-300">
-            <span class="text-[#ff55ff] font-bold">Visi ATTEA:</span><br />
-            Membawa semangat dari Markaz At-Ta'allum, akademi elit ini tidak sekadar mencari siapa yang berhak jadi juara. ATTEA Vol. 1 didedikasikan untuk membentuk calon pelajar yang pantang menyerah, berintegritas tinggi, berakhlak mulia, dan benar-benar siap secara ilmu untuk melangkah ke jenjang pendidikan selanjutnya.
+        <div class="bg-[#1c1c1c] p-6 border border-[#333]">
+          <p class="text-gray-300">
+            <b class="text-white">Visi ATTEA:</b> Membawa semangat dari Markaz At-Ta'allum, akademi elit ini tidak sekadar mencari siapa yang berhak jadi juara. ATTEA Vol. 1 didedikasikan untuk membentuk calon pelajar yang pantang menyerah, berintegritas tinggi, berakhlak mulia, dan benar-benar siap secara ilmu.
           </p>
         </div>
       </section>
 
       <!-- Formulir Pendaftaran -->
-      <section class="bg-[#4a3b32] pixel-border p-6 md:p-8 shadow-2xl scroll-anim">
-        <h2 class="font-minecraft-title text-base md:text-lg text-[#55ff55] mb-8 border-b-4 border-[#372a22] pb-3 flex items-center gap-2" style="text-shadow: 0 2px 0 #000;">
-          <span>📝</span> FORM PENDAFTARAN PANITIA
-        </h2>
+      <section id="form" class="scroll-anim mb-24">
+        <div class="bg-[#242424] p-8 md:p-10 border border-[#333]">
+          <h2 class="font-mc-heading font-black text-3xl uppercase mb-8 pb-4 border-b border-[#444]">
+            Form Pendaftaran
+          </h2>
 
-        <form id="oprec-form" class="space-y-6">
-          <div class="space-y-2">
-            <label class="block text-[#ffff55]">1. Nama Lengkap</label>
-            <input type="text" required class="w-full bg-[#1a120c] pixel-border p-3 text-white focus:outline-none focus:border-[#55ff55]" placeholder="Ketik namamu di sini..." />
-          </div>
-
-          <div class="space-y-2">
-            <label class="block text-[#ffff55]">2. Distrik</label>
-            <select required class="w-full bg-[#1a120c] pixel-border p-3 text-white focus:outline-none focus:border-[#55ff55] cursor-pointer">
-              <option value="" class="text-stone-500">-- Pilih Distrik --</option>
-              <option value="Sabi">Sabi</option>
-              <option value="Asyir">Asyir</option>
-              <option value="Darrasah">Darrasah</option>
-              <option value="Tabbah">Tabbah</option>
-              <option value="Zahro">Zahro</option>
-              <option value="Tamin">Tamin</option>
-              <option value="Yang lain">Yang lain..</option>
-            </select>
-          </div>
-
-          <div class="space-y-2">
-            <label class="block text-[#ffff55]">3. Divisi yang mau diambil</label>
-            <select required class="w-full bg-[#1a120c] pixel-border p-3 text-white focus:outline-none focus:border-[#55ff55] cursor-pointer">
-              <option value="" class="text-stone-500">-- Pilih Divisi Utama --</option>
-              <option value="Acara">Acara</option>
-              <option value="Perkap">Perkap</option>
-              <option value="Media">Media</option>
-              <option value="Konsum">Konsum</option>
-              <option value="Humas">Humas</option>
-            </select>
-          </div>
-
-          <div class="space-y-2">
-            <label class="block text-[#ffff55]">4. Divisi kedua:</label>
-            <select required class="w-full bg-[#1a120c] pixel-border p-3 text-white focus:outline-none focus:border-[#55ff55] cursor-pointer">
-              <option value="" class="text-stone-500">-- Pilih Divisi Cadangan --</option>
-              <option value="Acara">Acara</option>
-              <option value="Perkap">Perkap</option>
-              <option value="Media">Media</option>
-              <option value="Konsum">Konsum</option>
-              <option value="Humas">Humas</option>
-            </select>
-          </div>
-
-          <div class="space-y-2">
-            <label class="block text-[#ffff55]">5. Nomor wa yang aktif</label>
-            <input type="tel" required class="w-full bg-[#1a120c] pixel-border p-3 text-white focus:outline-none focus:border-[#55ff55]" placeholder="Contoh: +2012xxxxxxx" />
-          </div>
-
-          <div class="space-y-3">
-            <label class="block text-[#ffff55]">6. Seberapa siap mengikuti acara ini?</label>
-            <div class="flex flex-col sm:flex-row gap-6 bg-[#211711] p-4 pixel-border">
-              <label class="flex items-center gap-3 cursor-pointer">
-                <input type="radio" name="kesiapan" value="50%" required class="w-6 h-6 accent-[#55ff55]" />
-                <span class="text-[#ff5555]">50% (Ragu-ragu)</span>
-              </label>
-              <label class="flex items-center gap-3 cursor-pointer">
-                <input type="radio" name="kesiapan" value="100%" required class="w-6 h-6 accent-[#55ff55]" />
-                <span class="text-[#55ff55]">100% READY!</span>
-              </label>
+          <form id="oprec-form" class="space-y-6">
+            <div class="space-y-2">
+              <label class="block font-bold text-gray-200">1. Nama Lengkap</label>
+              <input type="text" required class="w-full bg-[#121212] border border-[#444] p-4 text-white focus:outline-none focus:border-[#00A86B] transition-colors" placeholder="Ketik nama lengkapmu..." />
             </div>
-          </div>
 
-          <div class="pt-4">
-            <button type="submit" class="w-full bg-[#707070] hover:bg-[#8c8c8c] text-white font-minecraft-title text-sm p-4 pixel-button shadow-[0_4px_0_#000] transition-all active:translate-y-1 active:shadow-none">
-              JOIN SERVER (SUBMIT)
-            </button>
-          </div>
-        </form>
+            <div class="space-y-2">
+              <label class="block font-bold text-gray-200">2. Distrik</label>
+              <select required class="w-full bg-[#121212] border border-[#444] p-4 text-white focus:outline-none focus:border-[#00A86B] appearance-none cursor-pointer">
+                <option value="" class="text-gray-500">-- Pilih Distrik --</option>
+                <option value="Sabi">Sabi</option>
+                <option value="Asyir">Asyir</option>
+                <option value="Darrasah">Darrasah</option>
+                <option value="Tabbah">Tabbah</option>
+                <option value="Zahro">Zahro</option>
+                <option value="Tamin">Tamin</option>
+                <option value="Yang lain">Yang lain..</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label class="block font-bold text-gray-200">3. Divisi Utama</label>
+                <select required class="w-full bg-[#121212] border border-[#444] p-4 text-white focus:outline-none focus:border-[#00A86B] appearance-none cursor-pointer">
+                  <option value="">-- Pilih Pilihan 1 --</option>
+                  <option value="Acara">Acara</option>
+                  <option value="Perkap">Perkap</option>
+                  <option value="Media">Media</option>
+                  <option value="Konsum">Konsum</option>
+                  <option value="Humas">Humas</option>
+                </select>
+              </div>
+
+              <div class="space-y-2">
+                <label class="block font-bold text-gray-200">4. Divisi Cadangan</label>
+                <select required class="w-full bg-[#121212] border border-[#444] p-4 text-white focus:outline-none focus:border-[#00A86B] appearance-none cursor-pointer">
+                  <option value="">-- Pilih Pilihan 2 --</option>
+                  <option value="Acara">Acara</option>
+                  <option value="Perkap">Perkap</option>
+                  <option value="Media">Media</option>
+                  <option value="Konsum">Konsum</option>
+                  <option value="Humas">Humas</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="block font-bold text-gray-200">5. Nomor WhatsApp Aktif</label>
+              <input type="tel" required class="w-full bg-[#121212] border border-[#444] p-4 text-white focus:outline-none focus:border-[#00A86B] transition-colors" placeholder="Contoh: +2012xxxxxxx" />
+            </div>
+
+            <div class="space-y-3 pt-2">
+              <label class="block font-bold text-gray-200">6. Seberapa siap mengikuti acara ini?</label>
+              <div class="flex flex-col sm:flex-row gap-4">
+                <label class="flex-1 flex items-center gap-3 p-4 border border-[#444] bg-[#121212] cursor-pointer hover:border-[#00A86B] transition-colors">
+                  <input type="radio" name="kesiapan" value="50%" required class="w-5 h-5 accent-[#00A86B]" />
+                  <span class="font-bold">50% (Ragu-ragu)</span>
+                </label>
+                <label class="flex-1 flex items-center gap-3 p-4 border border-[#444] bg-[#121212] cursor-pointer hover:border-[#00A86B] transition-colors">
+                  <input type="radio" name="kesiapan" value="100%" required class="w-5 h-5 accent-[#00A86B]" />
+                  <span class="font-bold">100% READY!</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="pt-6">
+              <button type="submit" class="w-full mc-btn-green p-4 text-xl tracking-wider">
+                JOIN SERVER
+              </button>
+            </div>
+          </form>
+        </div>
       </section>
     </div>
+    
+    <!-- Footer -->
+    <footer class="bg-[#1c1c1c] border-t border-[#333] text-center p-8 mt-auto">
+      <p class="text-gray-500 font-bold uppercase text-sm font-mc-heading tracking-widest">Markaz At-Ta'allum © 2026</p>
+    </footer>
+
   </div>
 
   <!-- Vanilla JavaScript -->
@@ -251,14 +258,12 @@
       // === 1. SETUP LAYAR PUTIH YANG BISA RUNTUH ===
       const shatterGrid = document.getElementById('shatter-grid');
       const blocks = [];
-      const totalBlocks = 100; // Grid 10x10
+      const totalBlocks = 100;
 
-      // Memasukkan 100 kotak putih untuk menutupi layar
       for (let i = 0; i < totalBlocks; i++) {
         const block = document.createElement('div');
         block.className = 'bg-white w-full h-full';
         
-        // Randomize physics jatuhnya
         const tx = (Math.random() - 0.5) * 150; 
         const ty = 100 + Math.random() * 100; 
         const rot = (Math.random() - 0.5) * 360; 
@@ -280,37 +285,24 @@
       const sfx = document.getElementById('sfx-explosion');
 
       tntBtn.addEventListener('click', () => {
-        // Mainkan suara
         if(sfx) { sfx.play().catch(e => console.log(e)); }
         
-        // 1. TNT bergetar keras
         tntBtn.classList.add('animate-shake');
 
-        // 2. Tunggu sebentar, lalu meledak
         setTimeout(() => {
-          
-          // Flash cahaya ledakan
           flashOverlay.classList.add('animate-flash');
-          
-          // Sembunyikan TNT
           tntBtn.style.display = 'none';
-
-          // 3. Hapus background putih utama biar gelapnya kelihatan pas runtuh
           introScreen.classList.remove('bg-white');
-
-          // 4. Layar putih runtuh
+          
           blocks.forEach(b => b.classList.add('crumble'));
 
-          // 5. Hapus layar intro sepenuhnya setelah animasi selesai
           setTimeout(() => {
             introScreen.remove();
             flashOverlay.remove();
             
-            // Aktifkan efek pop-up untuk form di bawahnya
             document.querySelectorAll('.scroll-anim').forEach(el => {
               observer.observe(el);
             });
-            
           }, 1500);
 
         }, 600); 
@@ -333,7 +325,7 @@
       const form = document.getElementById('oprec-form');
       form.addEventListener('submit', (e) => {
         e.preventDefault();
-        alert('Data berhasil diisi! (Tinggal integrasikan Action-nya ke Google Spreadsheet)');
+        alert('Data berhasil diisi! (Formulir ini siap disambungkan ke Google Apps Script)');
       });
     });
   </script>
