@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATTEA Vol. 1 - Open Recruitment</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Minecraft Vibes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+  <style>
+    /* Konfigurasi Font */
+    .font-minecraft-title { font-family: 'Press Start 2P', monospace; }
+    .font-minecraft-body { font-family: 'VT323', monospace; font-size: 1.45rem; }
+    
+    /* Styling Border Ala Minecraft */
+    .pixel-border {
+      border: 4px solid;
+      border-color: #858585 #373737 #373737 #858585;
+    }
+    .pixel-button {
+      border: 4px solid;
+      border-color: #adadad #535353 #535353 #adadad;
+    }
+    .pixelated { image-rendering: pixelated; }
+
+    /* Animasi Pop-Up untuk Scroll */
+    .scroll-anim {
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+    .animate-pop {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  </style>
+</head>
+<body class="bg-[#142407] text-[#e0e0e0] overflow-x-hidden selection:bg-[#55ff55] selection:text-black">
+
+  <!-- Audio Element (Hidden) -->
+  <!-- Pastikan file sfx-explosion.mp3 ada di folder yang sama -->
+  <audio id="sfx-explosion" src="sfx-explosion.mp3" preload="auto"></audio>
+
+  <!-- ================= HALAMAN INTRO (TNT) ================= -->
+  <div id="intro-screen" class="flex flex-col items-center justify-center min-h-screen p-4 text-center select-none">
+    <h1 class="font-minecraft-title text-white text-xl md:text-3xl mb-12 leading-relaxed" style="text-shadow: 0 4px 0 #000;">
+      SIAP BERGABUNG DENGAN<br/>KEPANITIAAN ATTEA?
+    </h1>
+    
+    <button id="tnt-btn" class="flex flex-col items-center focus:outline-none cursor-pointer transition-transform hover:scale-105 active:scale-95 bg-transparent border-none">
+      <!-- Pastikan file tnt-block.png ada di folder yang sama -->
+      <img 
+        src="tnt-block.png" 
+        alt="TNT" 
+        class="w-48 h-48 md:w-56 md:h-56 object-contain pixelated"
+        style="filter: drop-shadow(0 8px 0 rgba(0,0,0,0.5));"
+        onerror="this.src='https://images.unsplash.com/photo-1627856013091-fed6e4e30025?w=200'"
+      />
+      <span class="font-minecraft-title text-sm mt-8 text-yellow-400 bg-black/70 px-4 py-3 border-2 border-yellow-500 rounded">
+        CLICK TO EXPLODE & ENTER
+      </span>
+    </button>
+  </div>
+
+  <!-- ================= HALAMAN UTAMA (WEB MINECRAFT) ================= -->
+  <div id="main-content" class="hidden min-h-screen bg-[#2c2017] font-minecraft-body p-4 md:p-8" style="background-image: url('https://www.transparenttextures.com/patterns/dirt.png');">
+    <div class="max-w-3xl mx-auto space-y-12">
+      
+      <!-- Header -->
+      <header class="text-center pt-8 scroll-anim">
+        <h1 class="font-minecraft-title text-3xl md:text-5xl text-[#55ff55] mb-4 tracking-wider" style="text-shadow: 0 5px 0 #000;">
+          ATTEA VOL. 1
+        </h1>
+        <div class="inline-block bg-[#1a120c] pixel-border p-3 text-[#ffff55] tracking-widest text-xl">
+          [ OPEN RECRUITMENT PANITIA ]
+        </div>
+      </header>
+
+      <!-- Deskripsi Acara -->
+      <section class="bg-[#4a3b32] pixel-border p-6 md:p-8 shadow-2xl scroll-anim">
+        <h2 class="font-minecraft-title text-base md:text-lg text-[#ffaa00] mb-6 border-b-4 border-[#372a22] pb-3" style="text-shadow: 0 2px 0 #000;">
+          ATTEA Vol. 1 (Attaallum Elite Academy): Langkah Awal Menuju Ma'had Al-Azhar
+        </h2>
+        
+        <div class="space-y-4 text-stone-200">
+          <p>
+            <span class="text-[#ff5555] font-bold">Deskripsi Acara:</span><br />
+            ATTEA (Attaallum Elite Academy) Volume 1 adalah ajang kompetisi yang dirancang khusus bagi calon pelajar yang sedang mempersiapkan diri menghadapi <i class="text-[#55ffff]">Imtihan Qobul</i> (ujian masuk) Ma'had Al-Azhar. Lebih dari sekadar ajang adu kecerdasan, ATTEA hadir sebagai wadah simulasi yang lengkap dan menyeluruh untuk mematangkan wawasan akademik serta kesiapan mental peserta.
+          </p>
+          <p>
+            Acara ini dikemas sedemikian rupa agar berjalan seru, kompetitif, dan penuh tantangan. Dengan begitu, peserta bisa merasakan pengalaman bersaing yang tidak membosankan sekaligus menguji sejauh mana kemampuan mereka!
+          </p>
+        </div>
+
+        <div class="mt-8 space-y-6">
+          <h3 class="text-[#55ff55] font-bold border-b-2 border-[#372a22] pb-1">Fokus dan Tujuan Utama:</h3>
+          <p class="text-stone-300">Program perlombaan ini bertumpu pada tiga tujuan penting:</p>
+          
+          <div class="bg-[#31251e] p-4 pixel-border border-l-8 border-l-[#55ff55]">
+            <p class="text-[#55ff55] font-bold">⚔️ Persiapan Imtihan Qobul yang Terarah:</p>
+            <p class="text-sm text-stone-300 mt-1">Memberikan pengalaman langsung lewat perlombaan yang mirip dengan materi seleksi Ma'had Al-Azhar. Peserta akan diajak terbiasa dengan ritme, tekanan, dan jenis soal yang ada, sehingga rasa percaya diri mereka akan tumbuh dengan sendirinya.</p>
+          </div>
+
+          <div class="bg-[#31251e] p-4 pixel-border border-l-8 border-l-[#ffaa00]">
+            <p class="text-[#ffaa00] font-bold">🏹 Uji Pengetahuan yang Menantang:</p>
+            <p class="text-sm text-stone-300 mt-1">Setiap babak dan tantangan perlombaan didesain khusus untuk mengasah pemahaman peserta. Suasana kompetitif yang dibangun akan memacu setiap orang untuk fokus dan mengeluarkan potensi ilmu terbaik mereka.</p>
+          </div>
+
+          <div class="bg-[#31251e] p-4 pixel-border border-l-8 border-l-[#55ffff]">
+            <p class="text-[#55ffff] font-bold">🛡️ Membangun Karakter dan Kerja Sama:</p>
+            <p class="text-sm text-stone-300 mt-1">Menciptakan persaingan yang sehat dan positif. Di ATTEA, menjadi pintar saja tidak cukup. Peserta juga dituntut untuk membuktikan karakter mereka lewat nilai-nilai penting seperti kejujuran, sikap sportif saat bersaing, serta kekompakan saat bekerja sama dalam tim.</p>
+          </div>
+        </div>
+
+        <div class="mt-8 bg-[#211711] p-4 pixel-border">
+          <p class="text-stone-300">
+            <span class="text-[#ff55ff] font-bold">Visi ATTEA:</span><br />
+            Membawa semangat dari Markaz At-Ta'allum, akademi elit ini tidak sekadar mencari siapa yang berhak jadi juara. ATTEA Vol. 1 didedikasikan untuk membentuk calon pelajar yang pantang menyerah, berintegritas tinggi, berakhlak mulia, dan benar-benar siap secara ilmu untuk melangkah ke jenjang pendidikan selanjutnya.
+          </p>
+        </div>
+      </section>
+
+      <!-- Formulir Pendaftaran -->
+      <section class="bg-[#4a3b32] pixel-border p-6 md:p-8 shadow-2xl mb-24 scroll-anim">
+        <h2 class="font-minecraft-title text-base md:text-lg text-[#55ff55] mb-8 border-b-4 border-[#372a22] pb-3 flex items-center gap-2" style="text-shadow: 0 2px 0 #000;">
+          <span>📝</span> FORM PENDAFTARAN PANITIA
+        </h2>
+
+        <form id="oprec-form" class="space-y-6">
+          <div class="space-y-2">
+            <label class="block text-[#ffff55]">1. Nama Lengkap</label>
+            <input type="text" required class="w-full bg-[#1a120c] pixel-border p-3 text-white focus:outline-none focus:border-[#55ff55]" placeholder="Ketik namamu di sini..." />
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[#ffff55]">2. Distrik</label>
+            <select required class="w-full bg-[#1a120c] pixel-border p-3 text-white focus:outline-none focus:border-[#55ff55] cursor-pointer">
+              <option value="" class="text-stone-500">-- Pilih Distrik --</option>
+              <option value="Sabi">Sabi</option>
+              <option value="Asyir">Asyir</option>
+              <option value="Darrasah">Darrasah</option>
+              <option value="Tabbah">Tabbah</option>
+              <option value="Zahro">Zahro</option>
+              <option value="Tamin">Tamin</option>
+              <option value="Yang lain">Yang lain..</option>
+            </select>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[#ffff55]">3. Divisi yang mau diambil</label>
+            <select required class="w-full bg-[#1a120c] pixel-border p-3 text-white focus:outline-none focus:border-[#55ff55] cursor-pointer">
+              <option value="" class="text-stone-500">-- Pilih Divisi Utama --</option>
+              <option value="Acara">Acara</option>
+              <option value="Perkap">Perkap</option>
+              <option value="Media">Media</option>
+              <option value="Konsum">Konsum</option>
+              <option value="Humas">Humas</option>
+            </select>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[#ffff55]">4. Divisi kedua:</label>
+            <select required class="w-full bg-[#1a120c] pixel-border p-3 text-white focus:outline-none focus:border-[#55ff55] cursor-pointer">
+              <option value="" class="text-stone-500">-- Pilih Divisi Cadangan --</option>
+              <option value="Acara">Acara</option>
+              <option value="Perkap">Perkap</option>
+              <option value="Media">Media</option>
+              <option value="Konsum">Konsum</option>
+              <option value="Humas">Humas</option>
+            </select>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[#ffff55]">5. Nomor wa yang aktif</label>
+            <input type="tel" required class="w-full bg-[#1a120c] pixel-border p-3 text-white focus:outline-none focus:border-[#55ff55]" placeholder="Contoh: +2012xxxxxxx" />
+          </div>
+
+          <div class="space-y-3">
+            <label class="block text-[#ffff55]">6. Seberapa siap mengikuti acara ini?</label>
+            <div class="flex flex-col sm:flex-row gap-6 bg-[#211711] p-4 pixel-border">
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input type="radio" name="kesiapan" value="50%" required class="w-6 h-6 accent-[#55ff55]" />
+                <span class="text-[#ff5555]">50% (Ragu-ragu)</span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input type="radio" name="kesiapan" value="100%" required class="w-6 h-6 accent-[#55ff55]" />
+                <span class="text-[#55ff55]">100% READY!</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="pt-4">
+            <button type="submit" class="w-full bg-[#707070] hover:bg-[#8c8c8c] text-white font-minecraft-title text-sm p-4 pixel-button shadow-[0_4px_0_#000] transition-all active:translate-y-1 active:shadow-none">
+              JOIN SERVER (SUBMIT)
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+
+  <!-- Vanilla JavaScript untuk Logika Intro & Animasi -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const tntBtn = document.getElementById('tnt-btn');
+      const introScreen = document.getElementById('intro-screen');
+      const mainContent = document.getElementById('main-content');
+      const sfx = document.getElementById('sfx-explosion');
+      const form = document.getElementById('oprec-form');
+
+      // 1. Logika Klik TNT
+      tntBtn.addEventListener('click', () => {
+        // Play suara
+        if(sfx) {
+          sfx.play().catch(err => console.log("Audio diblokir browser:", err));
+        }
+        
+        // Kasih jeda dikit biar berasa meledak baru pindah
+        setTimeout(() => {
+          introScreen.classList.add('hidden');
+          mainContent.classList.remove('hidden');
+          window.scrollTo(0, 0); // Pastikan scroll ada di atas saat ganti halaman
+        }, 800);
+      });
+
+      // 2. Intersection Observer untuk efek pop-up saat di-scroll
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-pop');
+            observer.unobserve(entry.target); // Animasi cuma jalan sekali
+          }
+        });
+      }, {
+        threshold: 0.1, // Trigger saat 10% elemen terlihat
+        rootMargin: "0px 0px -50px 0px"
+      });
+
+      // Pasang observer ke semua elemen dengan class scroll-anim
+      document.querySelectorAll('.scroll-anim').forEach(el => {
+        observer.observe(el);
+      });
+
+      // 3. Handle Submit Form
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Data berhasil diisi! (Tinggal integrasikan Action-nya ke Google Spreadsheet)');
+      });
+    });
+  </script>
+</body>
+</html>
