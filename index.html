@@ -86,19 +86,20 @@
   <audio id="sfx-explosion" src="sfx-explosion.mp3" preload="auto"></audio>
 
   <!-- ================= HALAMAN INTRO (TNT & LAYAR PUTIH) ================= -->
-  <div id="intro-screen" class="fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
+  <!-- Ditambah bg-white di sini biar garis-garis grid tertutup sempurna -->
+  <div id="intro-screen" class="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-white">
     
-    <!-- Grid Layar Putih (Nanti di-generate kotak-kotaknya lewat JS supaya bisa runtuh) -->
+    <!-- Grid Layar Putih -->
     <div id="shatter-grid" class="absolute inset-0 grid grid-cols-10 grid-rows-10 z-40 scale-105 pointer-events-none">
-      <!-- Kotak putih akan dimasukkan di sini oleh JS -->
+      <!-- Kotak putih dimasukkan di sini oleh JS -->
     </div>
 
-    <!-- Tombol TNT -->
+    <!-- Tombol TNT (Udah diganti ke tnt.png dan pakai drop-shadow) -->
     <img 
       id="tnt-btn" 
       src="tnt.png" 
       alt="TNT" 
-      class="w-48 h-48 md:w-56 md:h-56 object-cover cursor-pointer z-50 transition-transform hover:scale-110 active:scale-95 shadow-2xl"
+      class="w-48 h-48 md:w-56 md:h-56 object-contain cursor-pointer z-50 transition-transform hover:scale-110 active:scale-95 drop-shadow-[0_10px_15px_rgba(0,0,0,0.4)]"
     />
   </div>
 
@@ -107,7 +108,6 @@
 
 
   <!-- ================= HALAMAN UTAMA (WEB MINECRAFT) ================= -->
-  <!-- Ini sudah ada di bawah intro-screen, jadi saat layar putih runtuh, web ini langsung kelihatan -->
   <div id="main-content" class="min-h-screen bg-[#2c2017] font-minecraft-body p-4 md:p-8 relative z-10" style="background-image: url('https://www.transparenttextures.com/patterns/dirt.png');">
     <div class="max-w-3xl mx-auto space-y-12 pb-24">
       
@@ -258,11 +258,11 @@
         const block = document.createElement('div');
         block.className = 'bg-white w-full h-full';
         
-        // Randomize physics jatuhnya (arah X, kedalaman Y, rotasi, delay)
-        const tx = (Math.random() - 0.5) * 150; // Bergerak ke kiri/kanan acak
-        const ty = 100 + Math.random() * 100; // Jatuh sejauh 100vh - 200vh
-        const rot = (Math.random() - 0.5) * 360; // Putaran acak
-        const delay = Math.random() * 0.2; // Delay jatuh acak biar gak barengan
+        // Randomize physics jatuhnya
+        const tx = (Math.random() - 0.5) * 150; 
+        const ty = 100 + Math.random() * 100; 
+        const rot = (Math.random() - 0.5) * 360; 
+        const delay = Math.random() * 0.2; 
 
         block.style.setProperty('--tx', `${tx}vw`);
         block.style.setProperty('--ty', `${ty}vh`);
@@ -283,22 +283,25 @@
         // Mainkan suara
         if(sfx) { sfx.play().catch(e => console.log(e)); }
         
-        // 1. TNT bergetar keras (sumbu fuse menyala)
+        // 1. TNT bergetar keras
         tntBtn.classList.add('animate-shake');
 
-        // 2. Tunggu sebentar (0.6 detik), lalu meledak
+        // 2. Tunggu sebentar, lalu meledak
         setTimeout(() => {
           
-          // Flash cahaya kuning ledakan
+          // Flash cahaya ledakan
           flashOverlay.classList.add('animate-flash');
           
           // Sembunyikan TNT
           tntBtn.style.display = 'none';
 
-          // 3. Layar putih runtuh
+          // 3. Hapus background putih utama biar gelapnya kelihatan pas runtuh
+          introScreen.classList.remove('bg-white');
+
+          // 4. Layar putih runtuh
           blocks.forEach(b => b.classList.add('crumble'));
 
-          // 4. Hapus layar intro sepenuhnya setelah animasi selesai (biar bisa scroll)
+          // 5. Hapus layar intro sepenuhnya setelah animasi selesai
           setTimeout(() => {
             introScreen.remove();
             flashOverlay.remove();
@@ -310,9 +313,8 @@
             
           }, 1500);
 
-        }, 600); // Waktu TNT bergetar sebelum meledak
+        }, 600); 
       });
-
 
       // === 3. OBSERVER UNTUK ANIMASI SCROLL WEB UTAMA ===
       const observer = new IntersectionObserver((entries) => {
@@ -326,8 +328,6 @@
         threshold: 0.1,
         rootMargin: "0px 0px -50px 0px"
       });
-
-      // (Observer dipasang setelah ledakan selesai di baris 266)
 
       // === 4. HANDLE SUBMIT FORM ===
       const form = document.getElementById('oprec-form');
