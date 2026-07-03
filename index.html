@@ -29,7 +29,7 @@
     }
     .pixelated { image-rendering: pixelated; }
 
-    /* Animasi Pop-Up untuk Scroll */
+    /* Animasi Scroll untuk Halaman Utama */
     .scroll-anim {
       opacity: 0;
       transform: translateY(40px) scale(0.95);
@@ -39,38 +39,77 @@
       opacity: 1;
       transform: translateY(0) scale(1);
     }
+
+    /* === ANIMASI LEDAKAN & RUNTUH === */
+    .animate-shake {
+      animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both infinite;
+    }
+    @keyframes shake {
+      0% { transform: translate(1px, 1px) rotate(0deg); }
+      10% { transform: translate(-1px, -2px) rotate(-1deg); }
+      20% { transform: translate(-3px, 0px) rotate(1deg); }
+      30% { transform: translate(3px, 2px) rotate(0deg); }
+      40% { transform: translate(1px, -1px) rotate(1deg); }
+      50% { transform: translate(-1px, 2px) rotate(-1deg); }
+      60% { transform: translate(-3px, 1px) rotate(0deg); }
+      70% { transform: translate(3px, 1px) rotate(-1deg); }
+      80% { transform: translate(-1px, -1px) rotate(1deg); }
+      90% { transform: translate(1px, 2px) rotate(0deg); }
+      100% { transform: translate(1px, -2px) rotate(-1deg); }
+    }
+
+    .animate-flash {
+      animation: flash 0.6s ease-out forwards;
+    }
+    @keyframes flash {
+      0% { opacity: 1; background-color: #fff; }
+      20% { background-color: #ffaa00; }
+      100% { opacity: 0; }
+    }
+
+    /* Animasi kotak-kotak putih jatuh */
+    .crumble {
+      animation: fall 1.2s forwards cubic-bezier(0.55, 0.085, 0.68, 0.53);
+    }
+    @keyframes fall {
+      0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+      100% { 
+        transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); 
+        opacity: 0; 
+      }
+    }
   </style>
 </head>
 <body class="bg-[#142407] text-[#e0e0e0] overflow-x-hidden selection:bg-[#55ff55] selection:text-black">
 
   <!-- Audio Element (Hidden) -->
-  <!-- Pastikan file sfx-explosion.mp3 ada di folder yang sama -->
   <audio id="sfx-explosion" src="sfx-explosion.mp3" preload="auto"></audio>
 
-  <!-- ================= HALAMAN INTRO (TNT) ================= -->
-  <div id="intro-screen" class="flex flex-col items-center justify-center min-h-screen p-4 text-center select-none">
-    <h1 class="font-minecraft-title text-white text-xl md:text-3xl mb-12 leading-relaxed" style="text-shadow: 0 4px 0 #000;">
-      SIAP BERGABUNG DENGAN<br/>KEPANITIAAN ATTEA?
-    </h1>
+  <!-- ================= HALAMAN INTRO (TNT & LAYAR PUTIH) ================= -->
+  <div id="intro-screen" class="fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
     
-    <button id="tnt-btn" class="flex flex-col items-center focus:outline-none cursor-pointer transition-transform hover:scale-105 active:scale-95 bg-transparent border-none">
-      <!-- Pastikan file tnt-block.png ada di folder yang sama -->
-      <img 
-        src="tnt-block.png" 
-        alt="TNT" 
-        class="w-48 h-48 md:w-56 md:h-56 object-contain pixelated"
-        style="filter: drop-shadow(0 8px 0 rgba(0,0,0,0.5));"
-        onerror="this.src='https://images.unsplash.com/photo-1627856013091-fed6e4e30025?w=200'"
-      />
-      <span class="font-minecraft-title text-sm mt-8 text-yellow-400 bg-black/70 px-4 py-3 border-2 border-yellow-500 rounded">
-        CLICK TO EXPLODE & ENTER
-      </span>
-    </button>
+    <!-- Grid Layar Putih (Nanti di-generate kotak-kotaknya lewat JS supaya bisa runtuh) -->
+    <div id="shatter-grid" class="absolute inset-0 grid grid-cols-10 grid-rows-10 z-40 scale-105 pointer-events-none">
+      <!-- Kotak putih akan dimasukkan di sini oleh JS -->
+    </div>
+
+    <!-- Tombol TNT -->
+    <img 
+      id="tnt-btn" 
+      src="tnt.png" 
+      alt="TNT" 
+      class="w-48 h-48 md:w-56 md:h-56 object-cover cursor-pointer z-50 transition-transform hover:scale-110 active:scale-95 shadow-2xl"
+    />
   </div>
 
+  <!-- Flash Overlay untuk efek ledakan -->
+  <div id="flash-overlay" class="fixed inset-0 z-[60] pointer-events-none opacity-0"></div>
+
+
   <!-- ================= HALAMAN UTAMA (WEB MINECRAFT) ================= -->
-  <div id="main-content" class="hidden min-h-screen bg-[#2c2017] font-minecraft-body p-4 md:p-8" style="background-image: url('https://www.transparenttextures.com/patterns/dirt.png');">
-    <div class="max-w-3xl mx-auto space-y-12">
+  <!-- Ini sudah ada di bawah intro-screen, jadi saat layar putih runtuh, web ini langsung kelihatan -->
+  <div id="main-content" class="min-h-screen bg-[#2c2017] font-minecraft-body p-4 md:p-8 relative z-10" style="background-image: url('https://www.transparenttextures.com/patterns/dirt.png');">
+    <div class="max-w-3xl mx-auto space-y-12 pb-24">
       
       <!-- Header -->
       <header class="text-center pt-8 scroll-anim">
@@ -127,7 +166,7 @@
       </section>
 
       <!-- Formulir Pendaftaran -->
-      <section class="bg-[#4a3b32] pixel-border p-6 md:p-8 shadow-2xl mb-24 scroll-anim">
+      <section class="bg-[#4a3b32] pixel-border p-6 md:p-8 shadow-2xl scroll-anim">
         <h2 class="font-minecraft-title text-base md:text-lg text-[#55ff55] mb-8 border-b-4 border-[#372a22] pb-3 flex items-center gap-2" style="text-shadow: 0 2px 0 #000;">
           <span>📝</span> FORM PENDAFTARAN PANITIA
         </h2>
@@ -205,49 +244,93 @@
     </div>
   </div>
 
-  <!-- Vanilla JavaScript untuk Logika Intro & Animasi -->
+  <!-- Vanilla JavaScript -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      
+      // === 1. SETUP LAYAR PUTIH YANG BISA RUNTUH ===
+      const shatterGrid = document.getElementById('shatter-grid');
+      const blocks = [];
+      const totalBlocks = 100; // Grid 10x10
+
+      // Memasukkan 100 kotak putih untuk menutupi layar
+      for (let i = 0; i < totalBlocks; i++) {
+        const block = document.createElement('div');
+        block.className = 'bg-white w-full h-full';
+        
+        // Randomize physics jatuhnya (arah X, kedalaman Y, rotasi, delay)
+        const tx = (Math.random() - 0.5) * 150; // Bergerak ke kiri/kanan acak
+        const ty = 100 + Math.random() * 100; // Jatuh sejauh 100vh - 200vh
+        const rot = (Math.random() - 0.5) * 360; // Putaran acak
+        const delay = Math.random() * 0.2; // Delay jatuh acak biar gak barengan
+
+        block.style.setProperty('--tx', `${tx}vw`);
+        block.style.setProperty('--ty', `${ty}vh`);
+        block.style.setProperty('--rot', `${rot}deg`);
+        block.style.animationDelay = `${delay}s`;
+
+        shatterGrid.appendChild(block);
+        blocks.push(block);
+      }
+
+      // === 2. LOGIKA LEDAKAN TNT ===
       const tntBtn = document.getElementById('tnt-btn');
       const introScreen = document.getElementById('intro-screen');
-      const mainContent = document.getElementById('main-content');
+      const flashOverlay = document.getElementById('flash-overlay');
       const sfx = document.getElementById('sfx-explosion');
-      const form = document.getElementById('oprec-form');
 
-      // 1. Logika Klik TNT
       tntBtn.addEventListener('click', () => {
-        // Play suara
-        if(sfx) {
-          sfx.play().catch(err => console.log("Audio diblokir browser:", err));
-        }
+        // Mainkan suara
+        if(sfx) { sfx.play().catch(e => console.log(e)); }
         
-        // Kasih jeda dikit biar berasa meledak baru pindah
+        // 1. TNT bergetar keras (sumbu fuse menyala)
+        tntBtn.classList.add('animate-shake');
+
+        // 2. Tunggu sebentar (0.6 detik), lalu meledak
         setTimeout(() => {
-          introScreen.classList.add('hidden');
-          mainContent.classList.remove('hidden');
-          window.scrollTo(0, 0); // Pastikan scroll ada di atas saat ganti halaman
-        }, 800);
+          
+          // Flash cahaya kuning ledakan
+          flashOverlay.classList.add('animate-flash');
+          
+          // Sembunyikan TNT
+          tntBtn.style.display = 'none';
+
+          // 3. Layar putih runtuh
+          blocks.forEach(b => b.classList.add('crumble'));
+
+          // 4. Hapus layar intro sepenuhnya setelah animasi selesai (biar bisa scroll)
+          setTimeout(() => {
+            introScreen.remove();
+            flashOverlay.remove();
+            
+            // Aktifkan efek pop-up untuk form di bawahnya
+            document.querySelectorAll('.scroll-anim').forEach(el => {
+              observer.observe(el);
+            });
+            
+          }, 1500);
+
+        }, 600); // Waktu TNT bergetar sebelum meledak
       });
 
-      // 2. Intersection Observer untuk efek pop-up saat di-scroll
+
+      // === 3. OBSERVER UNTUK ANIMASI SCROLL WEB UTAMA ===
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('animate-pop');
-            observer.unobserve(entry.target); // Animasi cuma jalan sekali
+            observer.unobserve(entry.target);
           }
         });
       }, {
-        threshold: 0.1, // Trigger saat 10% elemen terlihat
+        threshold: 0.1,
         rootMargin: "0px 0px -50px 0px"
       });
 
-      // Pasang observer ke semua elemen dengan class scroll-anim
-      document.querySelectorAll('.scroll-anim').forEach(el => {
-        observer.observe(el);
-      });
+      // (Observer dipasang setelah ledakan selesai di baris 266)
 
-      // 3. Handle Submit Form
+      // === 4. HANDLE SUBMIT FORM ===
+      const form = document.getElementById('oprec-form');
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         alert('Data berhasil diisi! (Tinggal integrasikan Action-nya ke Google Spreadsheet)');
