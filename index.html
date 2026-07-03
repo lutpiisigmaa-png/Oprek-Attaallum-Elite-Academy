@@ -90,7 +90,7 @@
   <!-- Audio Element -->
   <audio id="sfx-explosion" src="sfx-explosion.mp3" preload="auto"></audio>
 
-  <!-- Notifikasi Kustom "Achievement Get!" (Disembunyikan di luar layar awalnya) -->
+  <!-- Notifikasi Kustom "Achievement Get!" -->
   <div id="mc-toast" class="fixed top-6 right-6 z-[100] transform transition-transform duration-500 translate-x-[200%] bg-[#242424] border-4 border-[#F2B035] p-4 shadow-2xl flex items-center gap-4 text-white font-mc-body hidden">
     <!-- Gambar block emerald/diamond untuk notif -->
     <img src="Biru Putih dan Merah Kreatif Open Recruitment Instagram Post (2).png" class="w-10 h-10 pixelated" alt="Success">
@@ -100,9 +100,7 @@
     </div>
   </div>
 
-  <!-- Kontainer Creeper: Memotong badan agar sisa kepalanya saja -->
-  <!-- Lebar dan tinggi 80px. Karena overflow-hidden, badan di bawah kepalanya akan terpotong! -->
-<!-- KEPALA CREEPER: Ukuran diperbesar (w-36 h-36) -->
+  <!-- KEPALA CREEPER -->
   <div id="creeper-head-container" class="fixed z-30 w-36 h-36 overflow-hidden pointer-events-none opacity-0" style="transition: transform 1.5s ease-in-out;">
     <img src="creeper.png" class="w-full h-auto pixelated scale-125 origin-top translate-y-3" alt="Creeper Head">
   </div>
@@ -446,34 +444,7 @@
         setInterval(spawnCreeper, 8000);
       }
 
-      // === 6. HANDLE SUBMIT FORM & NOTIFIKASI KUSTOM ===
-      const form = document.getElementById('oprec-form');
-      const toast = document.getElementById('mc-toast');
-
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        // 1. Munculkan Box Notifikasi
-        toast.classList.remove('hidden');
-        // Jeda sedikit untuk trigger animasi Tailwind
-        setTimeout(() => {
-          toast.classList.remove('translate-x-[200%]');
-        }, 50);
-
-        // 2. Sembunyikan notifikasi setelah 4 detik
-        setTimeout(() => {
-          toast.classList.add('translate-x-[200%]');
-          setTimeout(() => { toast.classList.add('hidden'); }, 500); // Tunggu animasi keluar selesai
-        }, 4000);
-
-        // (Opsional) Mengosongkan form setelah dikirim
-        form.reset();
-        
-        // Nanti kode untuk mengirim data (fetch) ke URL Google Apps Script kamu masukkan di dalam fungsi ini
-      });
-
-    });
- // === 6. HANDLE SUBMIT FORM & NOTIFIKASI ===
+      // === 6. HANDLE SUBMIT FORM & NOTIFIKASI ===
       const form = document.getElementById('oprec-form');
       const toast = document.getElementById('mc-toast');
       const submitBtn = form.querySelector('button[type="submit"]');
@@ -497,13 +468,11 @@
           alasan: form.querySelector('textarea').value
         };
 
-        // GANTI "URL_APPS_SCRIPT_LU_DISINI" DENGAN URL YANG BARU AJA LU COPY DARI STEP 3!
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzq1m4XVLHmtRPukFkoS6Y-EPA9DwspTbl-Esgn5FlPKnEDSFs7vofhtAFgy47AXw_p/exec';
 
         fetch(scriptURL, {
           method: 'POST',
           body: JSON.stringify(formData),
-          // Tambahkan mode no-cors biar nggak diblokir sama browser
           mode: 'no-cors',
           headers: {
             'Content-Type': 'application/json'
@@ -533,8 +502,10 @@
           submitBtn.innerHTML = originalText;
           submitBtn.disabled = false;
         });
-      
+        
       });
+
+    }); // PENUTUP DOMContentLoaded YANG BENAR
   </script>
 </body>
 </html>
