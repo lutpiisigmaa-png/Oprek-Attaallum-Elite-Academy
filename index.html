@@ -1,17 +1,35 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Attaallum Elite Academy Vol. 1 - Open Recruitment</title>
-  
+
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Google Fonts: Minecraft Pixel + Modern Body -->
+  <!-- Setup Warna Custom Tailwind -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            maroon: '#6b363d',
+            cream: '#fff6ea',
+          },
+          fontFamily: {
+            heading: ['Playfair Display', 'serif'],
+            body: ['Outfit', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Playfair Display (Elegan) & Outfit (Modern Clean) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Press+Start+2P&display=swap" rel="stylesheet">
 
   <style>
     /* Konfigurasi Font */
@@ -19,6 +37,78 @@
     .font-mc-body { font-family: 'Noto Sans', sans-serif; }
     .font-pixel { font-family: 'Press Start 2P', monospace; line-height: 1.5; }
     
+    /* ANIMASI BACKGROUND BERGERAK */
+    body {
+      background: linear-gradient(-45deg, #fff6ea, #f9e6df, #fff6ea, #f2d8d8);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* GLASSMORPHISM - Transparan Elegan sesuai ciri khas Al-Fath */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 8px 32px 0 rgba(107, 54, 61, 0.1);
+    }
+    .glass-maroon {
+      background: rgba(107, 54, 61, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(107, 54, 61, 0.5);
+      box-shadow: 0 8px 32px 0 rgba(107, 54, 61, 0.3);
+    }
+
+    /* ANIMASI SCROLL (FADE UP) */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ANIMASI LOADING MASKOT ELANG TERBANG (WHOOSH) */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background-color: #fff6ea;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: opacity 0.5s ease-out;
+    }
+    .eagle-fly {
+      width: 250px;
+      /* Animasi masuk dari kanan, ngerem di tengah, melesat ke kiri */
+      animation: swoopIn 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+    @keyframes swoopIn {
+      0% { transform: translate(100vw, 20vh) scale(0.5) rotate(-15deg); opacity: 0; }
+      40% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+      60% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+      100% { transform: translate(-100vw, -20vh) scale(1.5) rotate(15deg); opacity: 0; }
+    }
+
+    /* MASKOT MELAYANG DI WEB (FLOATING) */
+    .float-anim {
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
     /* Tombol Minecraft */
     .mc-btn-green {
       background-color: #008A55;
@@ -75,14 +165,6 @@
       0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
       100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); opacity: 0; }
     }
-
-    /* Float Animation for Steve */
-    .animate-float { animation: float 3s ease-in-out infinite; }
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-15px); }
-      100% { transform: translateY(0px); }
-    }
   </style>
 </head>
 <body class="bg-[#121212] text-white overflow-x-hidden selection:bg-[#008A55] selection:text-white font-mc-body relative">
@@ -90,7 +172,7 @@
   <!-- Audio Element -->
   <audio id="sfx-explosion" src="sfx-explosion.mp3" preload="auto"></audio>
 
-  <!-- Notifikasi Kustom "Achievement Get!" -->
+  <!-- Notifikasi Kustom "Achievement Get!" (Disembunyikan di luar layar awalnya) -->
   <div id="mc-toast" class="fixed top-6 right-6 z-[100] transform transition-transform duration-500 translate-x-[200%] bg-[#242424] border-4 border-[#F2B035] p-4 shadow-2xl flex items-center gap-4 text-white font-mc-body hidden">
     <!-- Gambar block emerald/diamond untuk notif -->
     <img src="Biru Putih dan Merah Kreatif Open Recruitment Instagram Post (2).png" class="w-10 h-10 pixelated" alt="Success">
@@ -100,7 +182,7 @@
     </div>
   </div>
 
-  <!-- KEPALA CREEPER -->
+  <!-- KEPALA CREEPER: Ukuran diperbesar (w-36 h-36) -->
   <div id="creeper-head-container" class="fixed z-30 w-36 h-36 overflow-hidden pointer-events-none opacity-0" style="transition: transform 1.5s ease-in-out;">
     <img src="creeper.png" class="w-full h-auto pixelated scale-125 origin-top translate-y-3" alt="Creeper Head">
   </div>
@@ -444,7 +526,7 @@
         setInterval(spawnCreeper, 8000);
       }
 
-      // === 6. HANDLE SUBMIT FORM & NOTIFIKASI ===
+      // === 6. HANDLE SUBMIT FORM & NOTIFIKASI KUSTOM ===
       const form = document.getElementById('oprec-form');
       const toast = document.getElementById('mc-toast');
       const submitBtn = form.querySelector('button[type="submit"]');
@@ -487,11 +569,13 @@
           toast.classList.remove('hidden');
           setTimeout(() => { toast.classList.remove('translate-x-[200%]'); }, 50);
 
-          // Sembunyikan notifikasi setelah 4 detik
+          // PENGALIHAN KE WHATSAPP GROUP
+          // Kamu bisa mengganti URL di bawah dengan link grup WhatsApp yang sesuai
+          const linkGrup = 'https://chat.whatsapp.com/ITIzHv20IoOHpTpAdXe3Cb?s=cl&p=a&ilr=1';
+          
           setTimeout(() => {
-            toast.classList.add('translate-x-[200%]');
-            setTimeout(() => { toast.classList.add('hidden'); }, 500);
-          }, 4000);
+            window.location.href = linkGrup;
+          }, 2000);
 
           // Kosongkan isi form
           form.reset();
